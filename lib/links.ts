@@ -2,6 +2,8 @@
 export const links = {
   whatnot: "https://www.whatnot.com/user/hobbyboyzholdings",
   x: "https://x.com/HobbyBoyz_",
+  youtube: "https://www.youtube.com/@HobbyBoyz",
+  ebay: "https://www.ebay.com/usr/hobbyboyz-llc",
 } as const;
 
 // Anchor targets used by the header nav.
