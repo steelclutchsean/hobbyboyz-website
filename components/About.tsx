@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Reveal } from "./ui/Reveal";
 import { GlassCard } from "./ui/GlassCard";
 
@@ -27,13 +28,19 @@ export function About() {
         </Reveal>
 
         <Reveal delay={120}>
-          {/* TODO: real crew photo asset. Placeholder glass tile for now. */}
-          <GlassCard className="flex aspect-4/3 items-center justify-center overflow-hidden">
-            <div className="plate-texture flex h-full w-full items-center justify-center opacity-70">
-              <span className="rounded-full border border-white/15 bg-black/30 px-4 py-2 font-display text-xs uppercase tracking-[0.25em] text-ink-muted backdrop-blur">
-                Crew photo coming soon
-              </span>
-            </div>
+          <GlassCard className="relative aspect-4/3 overflow-hidden p-0">
+            <Image
+              src="/brand/crew.png"
+              alt="The Hobby Boyz crew opening card packs together"
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover"
+            />
+            {/* Subtle bottom fade to blend the art into the dark UI. */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 bg-linear-to-t from-obsidian/60 via-transparent to-transparent"
+            />
           </GlassCard>
         </Reveal>
       </div>
