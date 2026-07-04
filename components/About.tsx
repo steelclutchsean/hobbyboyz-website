@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Reveal } from "./ui/Reveal";
-import { GlassCard } from "./ui/GlassCard";
+import { HoloCard } from "./ui/HoloCard";
 
 export function About() {
   return (
@@ -28,7 +28,10 @@ export function About() {
         </Reveal>
 
         <Reveal delay={120}>
-          <GlassCard className="relative aspect-4/3 overflow-hidden p-0">
+          <HoloCard
+            foil
+            className="glass relative aspect-4/3 overflow-hidden rounded-2xl"
+          >
             <Image
               src="/brand/crew.png"
               alt="The Hobby Boyz crew opening card packs together"
@@ -41,7 +44,7 @@ export function About() {
               aria-hidden
               className="pointer-events-none absolute inset-0 bg-linear-to-t from-obsidian/60 via-transparent to-transparent"
             />
-          </GlassCard>
+          </HoloCard>
         </Reveal>
       </div>
     </section>
