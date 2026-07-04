@@ -55,7 +55,7 @@ export function BoxShowcase() {
 
       {/* 3D stage */}
       <div className="relative mx-auto mt-6 h-[58vh] max-h-[620px] min-h-[380px] w-full max-w-4xl cursor-grab touch-none active:cursor-grabbing">
-        {reduced ? <Poster /> : <Scene spin />}
+        {reduced ? <Poster /> : <Scene />}
       </div>
     </section>
   );

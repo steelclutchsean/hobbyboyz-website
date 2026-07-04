@@ -1,6 +1,6 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import {
   RoundedBox,
   useTexture,
@@ -9,22 +9,46 @@ import {
   ContactShadows,
   OrbitControls,
 } from "@react-three/drei";
-import { Suspense } from "react";
+import { Suspense, useRef } from "react";
 import * as THREE from "three";
+import { tilt } from "@/lib/tilt";
 
 // Mailer-box proportions (width, height, depth) taken from the photo.
 const W = 3.3;
 const H = 0.72;
 const D = 2.15;
 
-function Box({ spin }: { spin: boolean }) {
+function Box() {
   const top = useTexture("/brand/box-top.png");
   top.colorSpace = THREE.SRGBColorSpace;
   top.anisotropy = 8;
 
+  const boxRef = useRef<THREE.Group>(null);
+
+  // Rotation = gentle idle spin + scroll position through the section + gyro.
+  useFrame((state) => {
+    const g = boxRef.current;
+    if (!g) return;
+    const el = state.gl.domElement;
+    const rect = el.getBoundingClientRect();
+    const vh = window.innerHeight || 1;
+    const center = rect.top + rect.height / 2;
+    const progress = THREE.MathUtils.clamp(1 - center / vh, 0, 1); // 0..1 through viewport
+    const t = tilt.get();
+    const targetY =
+      state.clock.elapsedTime * 0.12 +
+      (progress - 0.5) * Math.PI * 1.4 +
+      t.x * 0.5;
+    const targetX = -0.04 + t.y * 0.35;
+    // Ease toward targets for smoothness.
+    g.rotation.y = THREE.MathUtils.lerp(g.rotation.y, targetY, 0.1);
+    g.rotation.x = THREE.MathUtils.lerp(g.rotation.x, targetX, 0.1);
+  });
+
   return (
     <group>
-      <RoundedBox args={[W, H, D]} radius={0.05} smoothness={5} castShadow>
+      <group ref={boxRef}>
+        <RoundedBox args={[W, H, D]} radius={0.05} smoothness={5} castShadow>
         <meshPhysicalMaterial
           color="#0b0b0d"
           metalness={0.6}
@@ -38,18 +62,19 @@ function Box({ spin }: { spin: boolean }) {
         />
       </RoundedBox>
 
-      {/* Logo + FIRST CLASS on the top face (plane has predictable UVs). */}
-      <mesh position={[0, H / 2 + 0.002, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[W * 0.92, D * 0.92]} />
-        <meshStandardMaterial
-          map={top}
-          transparent
-          roughness={0.34}
-          metalness={0.5}
-          toneMapped={false}
-          envMapIntensity={1.4}
-        />
-      </mesh>
+        {/* Logo + HOBBY HITZ on the top face (plane has predictable UVs). */}
+        <mesh position={[0, H / 2 + 0.002, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[W * 0.92, D * 0.92]} />
+          <meshStandardMaterial
+            map={top}
+            transparent
+            roughness={0.34}
+            metalness={0.5}
+            toneMapped={false}
+            envMapIntensity={1.4}
+          />
+        </mesh>
+      </group>
 
       <ContactShadows
         position={[0, -H / 2 - 0.02, 0]}
@@ -60,11 +85,10 @@ function Box({ spin }: { spin: boolean }) {
         color="#000000"
       />
 
+      {/* Drag adds camera orbit on top of the idle/scroll/gyro rotation. */}
       <OrbitControls
         enableZoom={false}
         enablePan={false}
-        autoRotate={spin}
-        autoRotateSpeed={0.9}
         dampingFactor={0.08}
         minPolarAngle={Math.PI * 0.18}
         maxPolarAngle={Math.PI * 0.82}
@@ -73,7 +97,7 @@ function Box({ spin }: { spin: boolean }) {
   );
 }
 
-export default function Scene({ spin = true }: { spin?: boolean }) {
+export default function Scene() {
   return (
     <Canvas
       gl={{ antialias: true, alpha: true }}
@@ -93,7 +117,7 @@ export default function Scene({ spin = true }: { spin?: boolean }) {
       </Environment>
 
       <Suspense fallback={null}>
-        <Box spin={spin} />
+        <Box />
       </Suspense>
     </Canvas>
   );

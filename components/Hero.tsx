@@ -6,6 +6,7 @@ import { links } from "@/lib/links";
 
 export function Hero() {
   const plateRef = useRef<HTMLDivElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -15,9 +16,16 @@ export function Hero() {
     const onScroll = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
-        const node = plateRef.current;
-        if (!node) return;
-        node.style.transform = `translate3d(0, ${window.scrollY * 0.12}px, 0)`;
+        const y = window.scrollY;
+        const vh = window.innerHeight || 1;
+        if (plateRef.current) {
+          plateRef.current.style.transform = `translate3d(0, ${y * 0.12}px, 0)`;
+        }
+        if (contentRef.current) {
+          const p = Math.min(y / vh, 1); // 0..1 over the first screen
+          contentRef.current.style.transform = `translate3d(0, ${y * 0.25}px, 0) scale(${1 - p * 0.08})`;
+          contentRef.current.style.opacity = `${1 - p * 0.9}`;
+        }
       });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -44,7 +52,10 @@ export function Hero() {
         className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(80%_60%_at_50%_40%,transparent,rgba(8,8,10,0.85))]"
       />
 
-      <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
+      <div
+        ref={contentRef}
+        className="mx-auto flex max-w-4xl flex-col items-center text-center will-change-transform"
+      >
         {/* Logo with gold sheen sweep. */}
         <div className="relative w-[min(88vw,640px)] overflow-hidden">
           <Logo

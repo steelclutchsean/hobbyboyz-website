@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { Reveal } from "./ui/Reveal";
 import { HoloCard } from "./ui/HoloCard";
+import { ParallaxImage } from "./ui/ParallaxImage";
 
 export function About() {
   return (
@@ -32,12 +32,10 @@ export function About() {
             foil
             className="glass relative aspect-4/3 overflow-hidden rounded-2xl"
           >
-            <Image
+            <ParallaxImage
               src="/brand/crew.png"
               alt="The Hobby Boyz crew opening card packs together"
-              fill
               sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover"
             />
             {/* Subtle bottom fade to blend the art into the dark UI. */}
             <div

@@ -1,55 +1,34 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
+import { registerScrub } from "@/lib/revealScrub";
 
 type RevealProps = {
   children: ReactNode;
   className?: string;
-  /** Delay in ms before the reveal transition starts. */
+  /** Kept for API compatibility; scrubbed reveals derive stagger from position. */
   delay?: number;
   as?: "div" | "section" | "li";
 };
 
 /**
- * Fade-and-rise on scroll into view. CSS lives in globals.css (.reveal).
- * Respects prefers-reduced-motion (the CSS shows content immediately).
+ * Scroll-scrubbed reveal: opacity + rise tied to scroll position (reverses on
+ * scroll up), driven by the shared manager. Respects prefers-reduced-motion
+ * (leaves content visible and unregistered).
  */
-export function Reveal({
-  children,
-  className = "",
-  delay = 0,
-  as = "div",
-}: RevealProps) {
+export function Reveal({ children, className = "", as = "div" }: RevealProps) {
   const ref = useRef<HTMLElement | null>(null);
-  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const node = ref.current;
     if (!node) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisible(true);
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.15, rootMargin: "0px 0px -8% 0px" },
-    );
-
-    observer.observe(node);
-    return () => observer.disconnect();
+    return registerScrub(node);
   }, []);
 
   const Tag = as;
   return (
-    <Tag
-      ref={ref as never}
-      className={`reveal ${visible ? "is-visible" : ""} ${className}`}
-      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
-    >
+    <Tag ref={ref as never} className={`reveal-scrub ${className}`}>
       {children}
     </Tag>
   );
