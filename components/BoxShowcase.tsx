@@ -42,14 +42,14 @@ export function BoxShowcase() {
     >
       <Reveal className="mx-auto max-w-2xl text-center">
         <p className="font-display text-xs uppercase tracking-[0.3em] text-gold-gradient">
-          First class
+          Hobby Hitz
         </p>
         <h2 className="mt-4 font-display text-3xl font-semibold tracking-tight text-chrome sm:text-4xl">
-          Every hit ships in style.
+          Carefully curated vintage and modern slabs you won&apos;t find
+          elsewhere.
         </h2>
         <p className="mt-5 text-base leading-relaxed text-ink-muted">
-          Our First Class box, done right. Give it a spin and watch the finish
-          catch the light.
+          Buy direct or rip live on one of our Whatnot shows.
         </p>
       </Reveal>
 
@@ -57,10 +57,6 @@ export function BoxShowcase() {
       <div className="relative mx-auto mt-6 h-[58vh] max-h-[620px] min-h-[380px] w-full max-w-4xl cursor-grab touch-none active:cursor-grabbing">
         {reduced ? <Poster /> : <Scene spin />}
       </div>
-
-      <p className="mt-2 text-center font-display text-xs uppercase tracking-[0.3em] text-ink-muted/60">
-        Drag to spin
-      </p>
     </section>
   );
 }
