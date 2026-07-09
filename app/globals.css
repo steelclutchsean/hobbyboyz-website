@@ -256,7 +256,7 @@ body::before {
     display: none;
   }
 }
-/* Touch devices are flat by default (no cursor to drive the tilt)... */
+/* Touch devices are flat (no cursor to drive the tilt). */
 @media (pointer: coarse) {
   .holo-card {
     transform: none;
@@ -265,19 +265,6 @@ body::before {
   .holo-foil::after {
     display: none;
   }
-}
-/* ...unless the gyroscope is enabled, then tilt/foil follow the device,
-   driven by the inherited :root vars that MotionProvider updates. */
-html.tilt-enabled .holo-card {
-  transform: rotateX(var(--rx)) rotateY(var(--ry));
-}
-html.tilt-enabled .holo-foil::before {
-  display: block;
-  opacity: 0.9;
-}
-html.tilt-enabled .holo-foil::after {
-  display: block;
-  opacity: 0.45;
 }
 
 /* Scroll-scrubbed reveal (paired with Reveal.tsx + lib/revealScrub).

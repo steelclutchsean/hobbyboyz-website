@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Chakra_Petch, Inter } from "next/font/google";
 import { SmoothScroll } from "@/components/SmoothScroll";
-import { MotionProvider } from "@/components/MotionProvider";
 import "./globals.css";
 
 const display = Chakra_Petch({
@@ -54,7 +53,6 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <SmoothScroll>{children}</SmoothScroll>
-        <MotionProvider />
       </body>
     </html>
   );

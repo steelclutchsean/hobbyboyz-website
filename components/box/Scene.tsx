@@ -11,7 +11,6 @@ import {
 } from "@react-three/drei";
 import { Suspense, useRef } from "react";
 import * as THREE from "three";
-import { tilt } from "@/lib/tilt";
 
 // Mailer-box proportions (width, height, depth) taken from the photo.
 const W = 3.3;
@@ -34,12 +33,9 @@ function Box() {
     const vh = window.innerHeight || 1;
     const center = rect.top + rect.height / 2;
     const progress = THREE.MathUtils.clamp(1 - center / vh, 0, 1); // 0..1 through viewport
-    const t = tilt.get();
     const targetY =
-      state.clock.elapsedTime * 0.12 +
-      (progress - 0.5) * Math.PI * 1.4 +
-      t.x * 0.5;
-    const targetX = -0.04 + t.y * 0.35;
+      state.clock.elapsedTime * 0.12 + (progress - 0.5) * Math.PI * 1.4;
+    const targetX = -0.04;
     // Ease toward targets for smoothness.
     g.rotation.y = THREE.MathUtils.lerp(g.rotation.y, targetY, 0.1);
     g.rotation.x = THREE.MathUtils.lerp(g.rotation.x, targetX, 0.1);
